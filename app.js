@@ -1,4 +1,4 @@
-\/* ============================================================
+/* ============================================================
    Little Bot Creations — app.js
    SETUP NOTES
    - PayPal: index.html loads the SDK with client-id=test, PayPal's
