@@ -114,10 +114,53 @@ function clickerPrice(n){ return CLICKER_BASE + (n - CLICKER_MIN) * CLICKER_STEP
    personalize: true customer types a name (max nameMax letters)
    nameClicker: true name clicker — 1–8 clickers, one letter each
    ============================================================ */
-// Product data now lives in products.json (edited via the Pages CMS admin
-// panel) instead of being hardcoded here. It's loaded asynchronously below —
-// see loadProducts() near the bottom of this file.
-let PRODUCTS = [];
+const PRODUCTS = [
+  { id: "crayon-lipbalm-holder", name: "Crayon Lip Balm Holder", price: 7.00, category: "gifts", images: ["02dd53f5-76bd-4a1d-82bc-26e3c6dc790e.JPG"] },
+  { id: "macaron-clicker", name: "Macaron Clicker", price: 5.00, category: "fidgets", images: ["Macaron.JPG"], best: true },
+  { id: "name-clicker", name: "Name Clicker", price: CLICKER_BASE, priceFrom: true, category: "fidgets", images: ["nameclicker.jpeg"], personalize: true, nameClicker: true, isNew: true, note: "One clicker per letter" },
+  { id: "icecream-lipbalm-holder", name: "Ice Cream Lip Balm Holder", price: 6.00, category: "gifts", images: ["icecream.JPG"] },
+  { id: "expandable-sword", name: "Expandable Sword", price: 15.00, category: "fidgets", images: ["Sword.JPG"], best: true },
+  { id: "minecraft-clickers", name: "Minecraft Clickers", price: 6.00, category: "fidgets", images: ["1629894a-6a3f-4a4f-8609-26e7d115ca1b.JPG"] },
+  { id: "dumpling-clickers", name: "Dumpling Clickers", price: 5.00, category: "fidgets", images: ["DUmpling.JPG"] },
+  { id: "pancake-clickers", name: "Pancake Clickers", price: 5.00, category: "fidgets", images: ["Panckakeclicker.JPG"] },
+  { id: "cookie-oreo-clickers", name: "Cookies & Oreo Clickers", price: 5.00, category: "fidgets", images: ["051bfb81-ea6b-4c7f-a8e5-2b9d0bf1d23f.JPG"], best: true },
+  { id: "fake-iphone", name: "Fake iPhone", price: 7.00, category: "gifts", images: ["Iphone.jpeg"] },
+  { id: "keychain-1", name: "$1 Keychains / Bag Charms", price: 1.00, category: "keychains", images: ["1dollar.jpeg"] },
+  { id: "keychain-2", name: "$2 Keychains / Bag Charms", price: 2.00, category: "keychains", images: ["Keychains2.jpeg"], best: true },
+  { id: "keychain-3-custom", name: "$3 Name Keychains", price: 3.00, category: "keychains", images: ["3doller.jpeg"], personalize: true, nameMax: 10 },
+  { id: "vanity-organizer", name: "Vanity Organizer", price: 10.00, category: "jewelry", images: ["IMG_5659.jpeg"], size: "5.5 inches wide" },
+  { id: "spilling-drink", name: "Spilling Drink", price: 12.00, category: "gifts", images: ["Spilling.jpeg"], size: "Height 8 inches, plate diameter 5 inches" },
+  { id: "long-dragon", name: "50\" Long Dragon", price: 17.00, category: "fidgets", images: ["dragon.jpeg"], size: "50 inches long", best: true },
+  { id: "nurse-pen-holder", name: "Nurse Pen Holder", price: 7.00, category: "desk", images: ["nurse1.jpeg"] },
+  { id: "polo-pen-holder", name: "Polo T-Shirt Pen Holder", price: 7.00, category: "desk", images: ["Coller.jpeg"] },
+  { id: "shoe-pencil-holder", name: "Shoe Pencil Holder", price: 7.00, category: "desk", images: ["IMG_5604.jpeg"], size: "Length 6 inches, height 3 inches", personalize: true, nameMax: 10 },
+  { id: "bookmark-holder", name: "Bookmark Holder", price: 5.00, category: "desk", images: ["BookmarkHolder.jpeg"], note: "Bookmark not included" },
+  { id: "dna-pencil-holder", name: "DNA Pencil Holder", price: 8.50, category: "desk", images: ["DNA.jpeg"] },
+  { id: "pi-pencil-holder", name: "Pi Pencil Holder", price: 7.00, category: "desk", images: ["Pi.jpeg"] },
+  { id: "jewelry-stand", name: "Jewelry Stand", price: 7.00, category: "jewelry", images: ["Jelewry holdger.jpeg"] },
+  { id: "world-map-pencil-holder", name: "World Map Pencil Holder", price: 6.50, category: "desk", images: ["World map.jpeg"] },
+  { id: "zipper-bookmark", name: "Zipper Bookmark", price: 2.00, category: "desk", images: ["Bookmark.jpeg"] },
+  { id: "dragon-fidget", name: "Dragon Fidget", price: 7.00, category: "fidgets", images: ["Dragon fidget toy.jpeg"], size: "15 inches long" },
+  { id: "puffer-jacket-holder", name: "Puffer Jacket Holder", price: 8.00, category: "desk", images: ["IMG_5344 2.JPG"], size: "Height 3.25 inches, width 4.5 inches" },
+  { id: "dress-utility-holder", name: "Dress Utility Holder", price: 7.00, category: "desk", images: ["IMG_5364.jpeg"], size: "Height 4 inches, width 4.5 inches" },
+  { id: "tissue-box", name: "Tissue Box Cover", price: 6.00, category: "desk", images: ["IMG_5347.jpg"] },
+  { id: "vanity-tray", name: "Vanity Tray", price: 6.00, category: "jewelry", images: ["IMG_5343 2.JPG"] },
+  { id: "heart-pencil-holder", name: "Heart Pencil Holder", price: 6.00, category: "desk", images: ["IMG_5144.JPG"] },
+  { id: "jewelry-stand-no-tray", name: "Jewelry Stand (No Tray)", price: 8.00, category: "jewelry", images: ["jewellery-stand.jpeg"], size: "Height 7 inches" },
+  { id: "jewelry-stand-with-tray", name: "Jewelry Stand (With Tray)", price: 10.00, category: "jewelry", images: ["IMG_5136.JPG"], size: "Height 7 inches, base plate diameter 5.5 inches", best: true },
+  { id: "qtip-travel-case", name: "Q-tip Travel Case", price: 3.00, category: "desk", images: ["IMG_5345.JPG"] },
+  { id: "airpod-case", name: "AirPod Case", price: 4.00, category: "jewelry", images: ["IMG_5150 2.JPG"] },
+  { id: "toad-pencil-holder", name: "Toad Pencil Holder", price: 6.50, category: "desk", images: ["toad-pencil-holder.jpeg"], size: "Height 3.5 inches, width 3 inches", isNew: true },
+  { id: "heel-makeup-holder", name: "Heel Makeup Holder", price: 7.00, category: "jewelry", images: ["shoe-makeup-holder.jpeg"], size: "Height 5.5 inches, width 5.25 inches", isNew: true },
+  { id: "female-doctor-coat-holder", name: "Female Doctor Coat Pencil Holder", price: 7.00, category: "desk", images: ["doctor-coat-pencil-holder.jpeg"], size: "Height 4 inches, width 4 inches", isNew: true },
+  { id: "male-doctor-coat-holder", name: "Male Doctor Coat Utility Holder", price: 9.00, category: "desk", images: ["Malecoat.jpeg"], size: "Height 4 inches, width 6 inches", isNew: true },
+  { id: "phone-case", name: "Phone Case", price: 3.50, category: "jewelry", images: ["IMG_5341 2.JPG"], isNew: true },
+  { id: "fidget-toy", name: "Fidget Toy", price: 4.00, category: "fidgets", images: ["IMG_5146.JPG"], isNew: true },
+  { id: "cute-dog", name: "Cute Dog", price: 4.00, category: "fidgets", images: ["CFDBDA3A-682A-4A75-915D-78069C838251.jpg"], isNew: true },
+  { id: "travel-toothbrush-holder", name: "Travel Toothbrush Holder", price: 5.00, category: "jewelry", images: ["Toothbrush holder.jpeg"], size: "Height 8 inches, diameter 1.5 inches", isNew: true },
+  { id: "gift-card-holder", name: "Cute Gift Card Holder", price: 3.00, category: "gifts", images: ["IMG_5361.jpeg"], isNew: true },
+  { id: "custom-order", name: "Custom Order", price: null, category: "custom", images: ["Customorder.jpeg"], note: "Prices vary based on request" },
+];
 
 function imgSrc(file){ return "images/" + encodeURIComponent(file).replace(/%2F/g, "/"); }
 function money(n){ return "$" + n.toFixed(2); }
@@ -133,7 +176,7 @@ function esc(s){
 
 /* ============================================================
    Cart state (persisted in localStorage)
-   A cart line: { productId, color, qty, note, personalName, clickers, clickerSound }
+   A cart line: { productId, color, qty, note, personalName, clickers }
    ============================================================ */
 const CART_KEY = "lbc_cart_v2";
 let cart = loadCart();
@@ -155,7 +198,6 @@ function sameLine(a, b){
     && a.color === b.color
     && (a.personalName || "") === (b.personalName || "")
     && (a.clickers || 0) === (b.clickers || 0)
-    && (a.clickerSound || "") === (b.clickerSound || "")
     && (a.note || "").trim() === (b.note || "").trim();
 }
 
@@ -195,7 +237,6 @@ function lineOptions(line){
   const bits = [line.color];
   if (colorSurcharge(line.color) > 0) bits.push("+" + money(colorSurcharge(line.color)));
   if (p && p.nameClicker) bits.push(`${line.clickers} clicker${line.clickers === 1 ? "" : "s"}`);
-  if (p && p.clickerOption) bits.push(line.clickerSound === "silent" ? "🤫 Silent" : "🔊 Not silent");
   if (line.personalName) bits.push(`Name: “${line.personalName}”`);
   return bits.join(" · ");
 }
@@ -286,7 +327,6 @@ let activeQty = 1;
 let activeImageIndex = 0;
 let activeName = "";
 let activeClickers = CLICKER_MIN;
-let activeClickerSound = "loud";
 let activeNote = "";
 
 function openProductModal(id){
@@ -304,7 +344,6 @@ function openProductModal(id){
   activeImageIndex = 0;
   activeName = "";
   activeClickers = CLICKER_MIN;
-  activeClickerSound = "loud";
   activeNote = "";
 
   document.getElementById("modalCategory").textContent =
@@ -317,7 +356,6 @@ function openProductModal(id){
 
   renderGallery();
   renderColorSwatches();
-  renderClickerSound();
   renderPersonalize();
   document.getElementById("itemNote").value = "";
   document.getElementById("qtyValue").textContent = activeQty;
@@ -378,20 +416,6 @@ function setPreviewTint(){
   const c = colorInfo(activeColor);
   const preview = document.getElementById("modalPreview");
   preview.style.background = c ? c.hexes[0] + "26" : "";
-}
-
-/* ---------- clicker sound (silent / not silent) ---------- */
-function renderClickerSound(){
-  const p = activeProduct;
-  const block = document.getElementById("clickerSoundBlock");
-  if (!p || !p.clickerOption){
-    block.hidden = true;
-    return;
-  }
-  block.hidden = false;
-  document.querySelectorAll("#soundOptions .sound-pill").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.sound === activeClickerSound);
-  });
 }
 
 /* ---------- name / clickers ---------- */
@@ -508,13 +532,6 @@ document.addEventListener("click", (e) => {
     renderGallery();
     return;
   }
-
-  const soundBtn = e.target.closest(".sound-pill");
-  if (soundBtn){
-    activeClickerSound = soundBtn.dataset.sound;
-    renderClickerSound();
-    return;
-  }
 });
 
 document.getElementById("nameInput").addEventListener("input", (e) => {
@@ -561,7 +578,6 @@ document.getElementById("addToCartBtn").addEventListener("click", () => {
     note: activeNote.trim(),
     personalName: activeProduct.personalize ? activeName.trim() : "",
     clickers: activeProduct.nameClicker ? activeClickers : 0,
-    clickerSound: activeProduct.clickerOption ? activeClickerSound : "",
   });
   closeProductModal();
   openCart();
@@ -802,25 +818,10 @@ creatorPhoto.addEventListener("error", () => {
 
 /* ============================================================
    Init
-   Products are fetched from products.json (edited via the Pages CMS
-   admin panel) before anything that depends on them is rendered.
    ============================================================ */
 document.getElementById("year").textContent = new Date().getFullYear();
 renderCategoryPills();
-renderCart(); // cart doesn't need product list to open/close, only to render line items
-
-async function loadProducts(){
-  try{
-    const res = await fetch("products.json", { cache: "no-store" });
-    const data = await res.json();
-    PRODUCTS = Array.isArray(data.products) ? data.products : [];
-  }catch(e){
-    console.error("Could not load products.json:", e);
-    PRODUCTS = [];
-  }
-  renderGrid();
-  renderScrollRow("bestSellersRow", PRODUCTS.filter(p => p.best));
-  renderScrollRow("newPrintsRow", PRODUCTS.filter(p => p.isNew));
-  renderCart(); // re-render now that products are available, so cart items show names/images/prices
-}
-loadProducts();
+renderGrid();
+renderScrollRow("bestSellersRow", PRODUCTS.filter(p => p.best));
+renderScrollRow("newPrintsRow", PRODUCTS.filter(p => p.isNew));
+renderCart();
