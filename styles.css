@@ -145,6 +145,21 @@ button{ font-family: inherit; }
 .pin-4{ bottom:6%; right:10%; transform: rotate(-4deg); z-index:1; width:34%; height:140px; }
 
 /* ============================================================
+   Colorful shop name
+   ============================================================ */
+.brand-title{ font-size: clamp(2.4rem, 5vw, 3.6rem); letter-spacing: -0.005em; }
+.brand-word{ display:inline-block; white-space: nowrap; }
+.brand-title span span{ display:inline-block; }
+.brand-title span span:nth-child(odd){ transform: rotate(-3deg); }
+.brand-title span span:nth-child(even){ transform: rotate(3deg) translateY(2px); }
+.brand-title .c1{ color: var(--coral); }
+.brand-title .c2{ color: #E09400; }   /* deeper yellow so it stays readable on the light background */
+.brand-title .c3{ color: #1DA192; }
+.brand-title .c4{ color: var(--bot-blue); }
+.brand-title .c5{ color: var(--purple); }
+.brand-title .c6{ color: var(--pink); }
+
+/* ============================================================
    Sections
    ============================================================ */
 .section{ padding: 52px 20px; max-width: 1180px; margin:0 auto; }
@@ -406,8 +421,6 @@ button{ font-family: inherit; }
 .name-hint.warn{ color: var(--coral-dark); font-weight:600; }
 .name-hint.ok{ color: #2C7A4B; font-weight:600; }
 .clicker-block{ margin-top: 10px; }
-.sound-pills{ display:flex; gap:9px; flex-wrap:wrap; }
-.sound-pills .pill{ padding: 8px 16px; font-size: .86rem; }
 .clicker-note{ font-size: .78rem; margin: 8px 0 0; }
 .optional{ font-weight:500; font-size: .74rem; color: var(--ink-soft); background: var(--paper); padding: 2px 7px; border-radius: var(--radius-full); }
 
