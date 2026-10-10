@@ -725,6 +725,58 @@ function closeCheckout(){
   checkoutModal.setAttribute("aria-hidden", "true");
 }
 
+/* ============================================================
+   Order emails
+   Every paid order is emailed to the shop owner through FormSubmit
+   (free, no server needed). FIRST TIME ONLY: the first order sends
+   an "Activate FormSubmit" email to this address — open it and click
+   Activate, or no order emails will arrive. After activating,
+   FormSubmit gives you a random code you can paste in place of the
+   email address below so the address isn't visible in the site code.
+   ============================================================ */
+const ORDER_EMAIL = "arutimahajangupta@gmail.com";
+const ORDER_EMAIL_ENDPOINT = "https://formsubmit.co/ajax/" + ORDER_EMAIL;
+
+function sendOrderEmail(details, lines, total){
+  try{
+    const payer = details.payer || {};
+    const name = payer.name ? `${payer.name.given_name || ""} ${payer.name.surname || ""}`.trim() : "";
+    const ship = (details.purchase_units && details.purchase_units[0] && details.purchase_units[0].shipping) || null;
+    const addr = ship && ship.address
+      ? [ship.name && ship.name.full_name, ship.address.address_line_1, ship.address.address_line_2,
+         [ship.address.admin_area_2, ship.address.admin_area_1, ship.address.postal_code].filter(Boolean).join(", "),
+         ship.address.country_code].filter(Boolean).join(" · ")
+      : "Not provided";
+    const payload = {
+      _subject: `New order ${money(total)} — Little Bot Creations`,
+      _template: "table",
+      _captcha: "false",
+      "Order ID (PayPal)": details.id || "",
+      "Total paid": money(total),
+      "Customer": name || "Not provided",
+      email: payer.email_address || "",          // FormSubmit uses this as Reply-To
+      "Ship to": addr,
+      "Order time": new Date().toLocaleString(),
+    };
+    lines.forEach((line, i) => {
+      const p = byId(line.productId);
+      const note = (line.note || "").trim();
+      payload[`Item ${i + 1}`] =
+        `${p ? p.name : line.productId} × ${line.qty} — ${lineOptions(line)} — ${money(linePrice(line))}` +
+        (note ? ` — Note: "${note}"` : "");
+    });
+    // keepalive lets the email go out even if the buyer closes the page right away
+    fetch(ORDER_EMAIL_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(err => console.error("Order email failed:", err));
+  }catch(err){
+    console.error("Order email failed:", err);   // never let email trouble block the thank-you screen
+  }
+}
+
 function renderPaypalButtons(){
   const container = document.getElementById("paypal-button-container");
   if (typeof paypal === "undefined"){
@@ -735,6 +787,7 @@ function renderPaypalButtons(){
   paypalRendered = true;
 
   paypal.Buttons({
+    fundingSource: paypal.FUNDING.PAYPAL,   // show only the PayPal button
     style: { shape: "pill", color: "blue", label: "paypal", height: 45 },
     createOrder: function(data, actions){
       const items = cart.map(line => {
@@ -763,6 +816,7 @@ function renderPaypalButtons(){
     },
     onApprove: function(data, actions){
       return actions.order.capture().then(function(details){
+        sendOrderEmail(details, cart.map(line => ({ ...line })), cartTotal());
         cart = [];
         saveCart();
         renderCart();
