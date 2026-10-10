@@ -734,7 +734,7 @@ function closeCheckout(){
    FormSubmit gives you a random code you can paste in place of the
    email address below so the address isn't visible in the site code.
    ============================================================ */
-const ORDER_EMAIL = "arutimahajangupta@gmail.com";
+const ORDER_EMAIL = "lilbots3dprinting@gmail.com";
 const ORDER_EMAIL_ENDPOINT = "https://formsubmit.co/ajax/" + ORDER_EMAIL;
 
 function sendOrderEmail(details, lines, total){
