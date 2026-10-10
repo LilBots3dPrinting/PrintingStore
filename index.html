@@ -306,7 +306,7 @@
     <div class="checkout-summary" id="checkoutSummary"></div>
     <div class="checkout-total"><span>Total</span><span id="checkoutTotal">$0.00</span></div>
     <div id="paypal-button-container"></div>
-    <p class="checkout-note">Payment is handled securely by PayPal — pay with a PayPal balance or a debit/credit card as a guest, no account needed.</p>
+    <p class="checkout-note">Payment is handled securely through PayPal.</p>
   </div>
 </div>
 
@@ -320,7 +320,7 @@
 </div>
 
 <!-- PayPal SDK: replace client-id=test with your own live/sandbox Client ID from developer.paypal.com -->
-<script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&intent=capture"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&intent=capture&disable-funding=card,credit,paylater,venmo"></script>
 <script src="app.js"></script>
 </body>
 </html>
